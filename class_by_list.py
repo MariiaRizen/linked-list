@@ -19,28 +19,37 @@ class LinkedList:
 
     def __init__(self):
         self.head = None
-
+        self.current = None
+        self.end_iteration = False
 
     def __iter__(self):
         return self
 
     def __next__(self):
-        if self.head is None:
+        current = self.current or self.head
+        if self.end_iteration is True:
+            self.end_iteration = False
             raise StopIteration
         else:
-            head, self.head = self.head, self.head.next
-        return head
+            node = current
+            self.current = current.next
+            if self.current is None:
+                self.end_iteration = True
+
+        return node
+
+
 
     def __len__(self):
         '''Returns number of Nodes in the list.
         When this method defined, built-in len function can be called on class instances
         '''
-        lenght = 0
+        length = 0
         current_node = self.head
         while current_node is not None:
-            lenght += 1
+            length = length + 1
             current_node = current_node.next
-        return lenght
+        return length
 
 
     def add_to_tail(self, value):
@@ -61,14 +70,28 @@ class LinkedList:
 
     def is_empty(self):
         """Returns True if there no Nodes in the list, False otherwise"""
-        if self.length == 0:
+        if self.head is None:
             return True
         else:
             return False
 
     def pop(self):
         '''Removes last Node from the list and returns it'''
-        pass
+        if self.head is None:
+            return None
+        elif self.head.next == None:
+            value = self.head.value
+            self.head = None
+            return value
+        else:
+            secondlast = self.head
+            while secondlast.next.next:
+                secondlast = secondlast.next
+            value = secondlast.next.value
+            secondlast.next = None
+            return value
+
+
 
     def copy(self):
         '''Returns a copy of linked list. Any changes of copy would not affect
@@ -87,13 +110,39 @@ class LinkedList:
         Node with smallest value goes first. Original list will not be
         changed by this method
         '''
-        pass
+        sorted_list = self.copy()
+        current = self.head
+        index = None
+        if self.head == None:
+            print('Is empty')
+        else:
+            while current != None:
+                index = current.next
+                while index != None:
+                    if current.value > index.value:
+                        temp = current.value
+                        current.value = index.value
+                        index.value = temp
+                    index = index.next
+                current = current.next
+
+        return sorted_list
 
     def reversed(self):
         '''Returns a copy of the linked list where Nodes are oredered in reverse order:
         head node of original list becomes a tail for copy
         '''
-        pass
+        reversed_list = self.copy()
+        prev = None
+        current = self.head
+        while (current is not None):
+            next = current.next
+            current.next = prev
+            prev = current
+            current = next
+        self.head = prev
+        return reversed_list
+
     def is_palindrome(self):
         '''A palindrome is a sequence that reads the same forward and backward.
         Method returns True if current list is a palindorome, False otherwise
@@ -113,9 +162,9 @@ if __name__ == '__main__':
     assert len(linked_list) == 4
     assert linked_list.is_empty() == False
     # assert linked_list.pop().value == 2
-    # list_copy = linked_list.copy()
-    # list_copy.add_to_tail(12)
-    # assert len(list_copy) != len(linked_list)
-    # sorted_copy = linked_list.sorted()
+    list_copy = linked_list.copy()
+    list_copy.add_to_tail(12)
+    assert len(list_copy) != len(linked_list)
+    sorted_copy = linked_list.sorted()
     # assert linked_list.is_palindrome() == False
-    # assert linked_list.reversed().head.value == 1
+    assert linked_list.reversed().head.value == 1
