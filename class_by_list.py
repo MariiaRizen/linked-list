@@ -76,20 +76,20 @@ class LinkedList:
             return False
 
     def pop(self):
-        '''Removes last Node from the list and returns it'''
+        """Removes last Node from the list and returns it"""
         if self.head is None:
             return None
         elif self.head.next == None:
-            value = self.head.value
+            pop_node = self.head
             self.head = None
-            return value
+            return pop_node
         else:
             secondlast = self.head
-            while secondlast.next.next:
+            while secondlast.next.next is not None:
                 secondlast = secondlast.next
-            value = secondlast.next.value
+            pop_node = secondlast.next
             secondlast.next = None
-            return value
+            return pop_node
 
 
 
@@ -101,7 +101,7 @@ class LinkedList:
         current = self.head
         while current is not None:
             newNode = Node(current.value)
-            newLinkedList.add_to_tail(newNode)
+            newLinkedList.add_to_tail(newNode.value)
             current = current.next
         return newLinkedList
 
@@ -111,7 +111,7 @@ class LinkedList:
         changed by this method
         '''
         sorted_list = self.copy()
-        current = self.head
+        current = sorted_list.head
         index = None
         if self.head == None:
             print('Is empty')
@@ -129,19 +129,17 @@ class LinkedList:
         return sorted_list
 
     def reversed(self):
-        '''Returns a copy of the linked list where Nodes are oredered in reverse order:
+        """Returns a copy of the linked list where Nodes are oredered in reverse order:
         head node of original list becomes a tail for copy
-        '''
-        reversed_list = self.copy()
-        prev = None
-        current = self.head
-        while (current is not None):
-            next = current.next
-            current.next = prev
-            prev = current
-            current = next
-        self.head = prev
-        return reversed_list
+        """
+
+        reversed_linked_list = LinkedList()
+        l = []
+        for element in self:
+            l.append(element.value)
+        for element in reversed(l):
+            reversed_linked_list.add_to_tail(element)
+        return reversed_linked_list
 
     def is_palindrome(self):
         '''A palindrome is a sequence that reads the same forward and backward.
@@ -157,14 +155,15 @@ if __name__ == '__main__':
     linked_list.add_to_head(5)
     linked_list.add_to_head(10)
 
-    for node in linked_list:
-        print(node)
+    # for node in linked_list:
+    #     print(node)
     assert len(linked_list) == 4
     assert linked_list.is_empty() == False
-    # assert linked_list.pop().value == 2
+    assert linked_list.pop().value == 2
     list_copy = linked_list.copy()
     list_copy.add_to_tail(12)
     assert len(list_copy) != len(linked_list)
     sorted_copy = linked_list.sorted()
     # assert linked_list.is_palindrome() == False
     assert linked_list.reversed().head.value == 1
+
