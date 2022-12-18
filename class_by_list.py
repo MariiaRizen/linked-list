@@ -110,23 +110,13 @@ class LinkedList:
         Node with smallest value goes first. Original list will not be
         changed by this method
         '''
-        sorted_list = self.copy()
-        current = sorted_list.head
-        index = None
-        if self.head == None:
-            print('Is empty')
-        else:
-            while current != None:
-                index = current.next
-                while index != None:
-                    if current.value > index.value:
-                        temp = current.value
-                        current.value = index.value
-                        index.value = temp
-                    index = index.next
-                current = current.next
-
-        return sorted_list
+        sorted_linked_list = LinkedList()
+        l = []
+        for element in self:
+            l.append(element.value)
+        for element in sorted(l):
+            sorted_linked_list.add_to_tail(element)
+        return sorted_linked_list
 
     def reversed(self):
         """Returns a copy of the linked list where Nodes are oredered in reverse order:
@@ -145,7 +135,16 @@ class LinkedList:
         '''A palindrome is a sequence that reads the same forward and backward.
         Method returns True if current list is a palindorome, False otherwise
         '''
-        pass
+        l = []
+        for element in self:
+            l.append(element.value)
+        reversed_list = l[::-1]
+        if l == reversed_list:
+            return True
+        else:
+            return False
+
+
 
 
 if __name__ == '__main__':
@@ -164,6 +163,6 @@ if __name__ == '__main__':
     list_copy.add_to_tail(12)
     assert len(list_copy) != len(linked_list)
     sorted_copy = linked_list.sorted()
-    # assert linked_list.is_palindrome() == False
+    assert linked_list.is_palindrome() == False
     assert linked_list.reversed().head.value == 1
 
